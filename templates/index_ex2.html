@@ -3,21 +3,19 @@
 <div class="main">
   <div class="title">
     <h3>Image BeautyGAN</h3>
-    <!-- <p>
-      <small>A web app demo</small>
-    </p> -->
   </div>
 
   <div class="panel">
+    <h5>Your face image</h5>
     <input id="file-upload" class="hidden" type="file" accept="image/x-png,image/gif,image/jpeg" />
-    <label for="file-upload" id="file-drag" class="upload-box">
+    <label for="file-upload" id="file-drag" class="upload-box-2">
       <div id="upload-caption">Drop image here or click to select</div>
       <img id="image-preview" class="hidden" />
     </label>
   </div>
   <div style="margin-bottom: 2rem;">
-    <input type="button" value="Submit" class="button" onclick="submitImage();" />
-    <input type="button" value="Clear" class="button" onclick="clearImage();" />
+    <input type="button" value="Submit" class="button_index_2" onclick="submitImageBeauty();" />
+    <input type="button" value="Clear" class="button_index_2" onclick="clearImage();" />
   </div>
 
   <div id="image-box">

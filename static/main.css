@@ -21,6 +21,22 @@ body {
   min-width: 6rem;
 }
 
+/* Global button style */
+.button_index_2 {
+  font-family: inherit;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  outline: none;
+  color: #ffffff;
+  background-color: rgb(250, 172, 4);
+  padding: 0.5rem 1.2rem;
+  border-radius: 2px;
+  font-size: 1rem;
+  min-width: 6rem;
+}
+
 .button:hover {
   background-color: rgb(16, 110, 190);
 }
@@ -75,6 +91,22 @@ body {
   margin: 1rem 0 2rem 0;
 }
 
+.upload-box-2 {
+  font-size: 0.8rem;
+  color: #666666;
+  cursor: pointer;
+  width: 16rem;
+  height: 10rem;
+  background: rgb(248, 246, 212);
+  border: 0.1rem dashed #6060f5;
+  border-radius: 0.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 1rem 0 2rem 0;
+}
+
 .upload-box.dragover {
   /* background-color: grey; */
   color: #eeeeee;
@@ -87,6 +119,12 @@ body {
 }
 
 .upload-box #image-preview {
+  max-width: 14rem;
+  max-height: 8rem;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
+}
+
+.upload-box-2 #image-preview {
   max-width: 14rem;
   max-height: 8rem;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
