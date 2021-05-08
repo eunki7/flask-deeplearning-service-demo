@@ -24,7 +24,7 @@ def deprocess(img):
 def model_predict():
     batch_size = 1
     img_size = 256
-    no_makeup = cv2.resize(imread(os.path.join('mlib','imgs', 'no_makeup', 'xfsy_0069.jpg')), (img_size, img_size))
+    no_makeup = cv2.resize(imread(os.path.join('mlib','imgs', 'no_makeup', 'xfsy_0071.png')), (img_size, img_size))
     X_img = np.expand_dims(preprocess(no_makeup), 0)
     makeups = glob.glob(os.path.join('mlib', 'imgs', 'makeup', '*.*'))
     result = np.ones((2 * img_size, (len(makeups) + 1) * img_size, 3))

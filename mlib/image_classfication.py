@@ -1,6 +1,13 @@
 # 참조 : https://github.com/mtobeiyf/keras-flask-deploy-webapp
 # 텐서플로우 관련 패키지
-import tensorflow as tf
+
+# 2.x
+# import tensorflow as tf
+
+# 1.x
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 from tensorflow import keras
 from tensorflow.keras.applications.imagenet_utils import preprocess_input, decode_predictions
 from tensorflow.keras.models import load_model
@@ -15,7 +22,7 @@ model = MobileNetV2(weights='imagenet')
 
 # 모델 저장
 # MODEL_PATH = 'models/model_p1/model.h5'
-# model.save()
+# model.save(MODEL_PATH)
 
 # 모델 로드
 # model = load_model(MODEL_PATH, compile=False)

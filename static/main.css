@@ -107,6 +107,22 @@ body {
   margin: 1rem 0 2rem 0;
 }
 
+.upload-box-3 {
+  font-size: 0.8rem;
+  color: #666666;
+  cursor: pointer;
+  width: 16rem;
+  height: 10rem;
+  background: rgb(104, 181, 245);
+  border: 0.1rem dashed #6060f5;
+  border-radius: 0.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 1rem 0 2rem 0;
+}
+
 .upload-box.dragover {
   /* background-color: grey; */
   color: #eeeeee;
@@ -136,6 +152,20 @@ body {
 }
 
 #image-box {
+  position: relative;
+  width: auto;
+  float: left;
+  margin-bottom: 2rem;
+}
+
+#image-box-b1 {
+  position: relative;
+  width: auto;
+  float: left;
+  margin-bottom: 2rem;
+}
+
+#image-box-b2 {
   position: relative;
   width: auto;
   float: left;
