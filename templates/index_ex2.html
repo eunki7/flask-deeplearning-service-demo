@@ -8,35 +8,35 @@
   <div class="panel">
     <h5>Your face image</h5>
     <input id="file-upload-gan-ori" class="hidden" type="file" accept="image/x-png,image/gif,image/jpeg" />
-    <label for="file-upload-gan-ori" id="file-drag-gan-ori" class="upload-box-2">
-      <div id="upload-caption">Drop image here or click to select</div>
-      <img id="image-preview" class="hidden" />
+    <label for="file-upload-gan-ori" id="file-drag-gan-ori" class="upload-box-1">
+      <div id="upload-caption-ori">Drop image here or click to select</div>
+      <img id="image-preview-ori" class="hidden" />
     </label>
   </div>
   <div class="panel">
     <h5>Your makeup image</h5>
     <input id="file-upload-gan-makeup" class="hidden" type="file" accept="image/x-png,image/gif,image/jpeg" />
-    <label for="file-upload-gan-makeup" id="file-drag-gan-makeup" class="upload-box-3">
-      <div id="upload-caption">Drop image here or click to select</div>
-      <img id="image-preview" class="hidden" />
+    <label for="file-upload-gan-makeup" id="file-drag-gan-makeup" class="upload-box-2">
+      <div id="upload-caption-makeup">Drop image here or click to select</div>
+      <img id="image-preview-makeup" class="hidden" />
     </label>
   </div>
   <div style="margin-bottom: 2rem;">
-    <input type="button" value="Submit" class="button_index_2" onclick="submitImageBeauty();" />
-    <input type="button" value="Clear" class="button_index_2" onclick="clearImage();" />
+    <input type="button" value="Submit" class="button" onclick="submitImageBeauty();" />
+    <input type="button" value="Clear" class="button" onclick="clearImage();" />
   </div>
 
   <div id="image-box-b1">
-    <img id="image-display" />
-    <div id="pred-result" class="hidden"></div>
-    <svg id="loader" class="hidden" viewBox="0 0 32 32" width="32" height="32">
+    <img id="image-display-ori" />
+    <div id="pred-result-ori" class="hidden"></div>
+    <svg id="loader-ori" class="hidden" viewBox="0 0 32 32" width="32" height="32">
       <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
     </svg>
   </div>
   <div id="image-box-b2">
-    <img id="image-display" />
-    <div id="pred-result" class="hidden"></div>
-    <svg id="loader" class="hidden" viewBox="0 0 32 32" width="32" height="32">
+    <img id="image-display-makeup" />
+    <div id="pred-result-makeup" class="hidden"></div>
+    <svg id="loader-makeup" class="hidden" viewBox="0 0 32 32" width="32" height="32">
       <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
     </svg>
   </div>

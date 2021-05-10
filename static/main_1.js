@@ -40,20 +40,6 @@ function submitImageCls() {
   predictImageCls(imageDisplay.src);
 }
 
-function submitImageBeauty() {
-  console.log("submit");
-
-  if (!imageDisplay.src || !imageDisplay.src.startsWith("data")) {
-    window.alert("이미지를 선택해 주세요.");
-    return;
-  }
-
-  loader.classList.remove("hidden");
-  imageDisplay.classList.add("loading");
-
-  predictImageBeauty(imageDisplay.src);
-}
-
 function clearImage() {
   fileSelect.value = "";
 
@@ -91,26 +77,6 @@ function previewFile(file) {
 
 function predictImageCls(image) {
   fetch("/predict-img-cls", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(image)
-  })
-    .then(resp => {
-      if (resp.ok)
-        resp.json().then(data => {
-          displayResult(data);
-        });
-    })
-    .catch(err => {
-      console.log("An error occured", err.message);
-      window.alert("에러 발생!");
-    });
-}
-
-function predictImageBeauty(image) {
-  fetch("/predict-img-beauty", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

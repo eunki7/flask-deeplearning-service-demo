@@ -3,49 +3,96 @@ var fileSelectOri = document.getElementById("file-upload-gan-ori");
 var fileDragMp = document.getElementById("file-drag-gan-makeup");
 var fileSelectMp = document.getElementById("file-upload-gan-makeup");
 
-fileDragOri.addEventListener("dragover", fileDragHover, false);
-fileDragOri.addEventListener("dragleave", fileDragHover, false);
-fileDragOri.addEventListener("drop", fileSelectHandler, false);
-fileSelectOri.addEventListener("change", fileSelectHandler, false);
+var imagePreviewOri = document.getElementById("image-preview-ori");
+var imageDisplayOri = document.getElementById("image-display-ori");
+var uploadCaptionOri = document.getElementById("upload-caption-ori");
+var predResultOri = document.getElementById("pred-result-ori");
+var loaderOri = document.getElementById("loader-ori");
 
-fileDragMp.addEventListener("dragover", fileDragHover, false);
-fileDragMp.addEventListener("dragleave", fileDragHover, false);
-fileDragMp.addEventListener("drop", fileSelectHandler, false);
-fileSelectMp.addEventListener("change", fileSelectHandler, false);
+var imagePreviewMakeup = document.getElementById("image-preview-makeup");
+var imageDisplayMakeup = document.getElementById("image-display-makeup");
+var uploadCaptionMakeup = document.getElementById("upload-caption-makeup");
+var predResultMakeup = document.getElementById("pred-result-makeup");
+var loaderMakeup = document.getElementById("loader-makeup");
 
-function fileDragHover(e) {
+fileDragOri.addEventListener("dragover", fileDragHoverOri, false);
+fileDragOri.addEventListener("dragleave", fileDragHoverOri, false);
+fileDragOri.addEventListener("drop", fileSelectHandlerOri, false);
+fileSelectOri.addEventListener("change", fileSelectHandlerOri, false);
+
+fileDragMp.addEventListener("dragover", fileDragHoverMakeup, false);
+fileDragMp.addEventListener("dragleave", fileDragHoverMakeup, false);
+fileDragMp.addEventListener("drop", fileSelectHandlerMakeup, false);
+fileSelectMp.addEventListener("change", fileSelectHandlerMakeup, false);
+
+function fileDragHoverOri(e) {
   console.log(e);
   e.preventDefault();
   e.stopPropagation();
 
-  this.className = e.type === "dragover" ? "upload-box dragover" : "upload-box";
+  this.className = e.type === "dragover" ? "upload-box-1 dragover" : "upload-box-1";
 }
 
-function fileSelectHandler(e) {
+function fileDragHoverMakeup(e) {
+  console.log(e);
+  e.preventDefault();
+  e.stopPropagation();
+
+  this.className = e.type === "dragover" ? "upload-box-2 dragover" : "upload-box-2";
+}
+
+function fileSelectHandlerOri(e) {
   var files = e.target.files || e.dataTransfer.files;
-  fileDragHover(e);
+  fileDragHoverOri(e);
   for (var i = 0, f; (f = files[i]); i++) {
-    previewFile(f);
+    previewFileOri(f);
   }
 }
 
-var imagePreview = document.getElementById("image-preview");
-var imageDisplay = document.getElementById("image-display");
-var uploadCaption = document.getElementById("upload-caption");
-var predResult = document.getElementById("pred-result");
-var loader = document.getElementById("loader");
-
-function submitImageCls() {
-
-  if (!imageDisplay.src || !imageDisplay.src.startsWith("data")) {
-    window.alert("이미지를 선택해 주세요.");
-    return;
+function fileSelectHandlerMakeup(e) {
+  var files = e.target.files || e.dataTransfer.files;
+  fileDragHoverMakeup(e);
+  for (var i = 0, f; (f = files[i]); i++) {
+    previewFileMakeup(f);
   }
+}
 
-  loader.classList.remove("hidden");
-  imageDisplay.classList.add("loading");
+function previewFileOri(file) {
+  console.log('previewFileOri', file.name);
+  var fileName = encodeURI(file.name);
 
-  predictImageCls(imageDisplay.src);
+  var reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onloadend = () => {
+    imagePreviewOri.src = URL.createObjectURL(file);
+
+    show(imagePreviewOri);
+    hide(uploadCaptionOri);
+
+    predResultOri.innerHTML = "";
+    imageDisplayOri.classList.remove("loading");
+
+    displayImage(reader.result, "image-display-ori");
+  };
+}
+
+function previewFileMakeup(file) {
+  console.log('previewFileMakeup', file.name);
+  var fileName = encodeURI(file.name);
+
+  var reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onloadend = () => {
+    imagePreviewMakeup.src = URL.createObjectURL(file);
+
+    show(imagePreviewMakeup);
+    hide(uploadCaptionMakeup);
+
+    predResultMakeup.innerHTML = "";
+    imageDisplayMakeup.classList.remove("loading");
+
+    displayImage(reader.result, "image-display-makeup");
+  };
 }
 
 function submitImageBeauty() {
@@ -59,62 +106,34 @@ function submitImageBeauty() {
   loader.classList.remove("hidden");
   imageDisplay.classList.add("loading");
 
-  predictImageBeauty(imageDisplay.src);
+  predictImageBeauty(imageDisplayOri.src);
 }
 
 function clearImage() {
-  fileSelect.value = "";
+  fileSelectOri.value = "";
+  fileSelectMp.value = "";
 
-  imagePreview.src = "";
-  imageDisplay.src = "";
-  predResult.innerHTML = "";
+  imagePreviewOri.src = "";
+  imagePreviewMakeup.src = "";
+  imageDisplayOri.src = "";
+  imageDisplayMakeup.src = "";
+  predResultOri.innerHTML = "";
+  predResultMakeup.innerHTML = "";
 
-  hide(imagePreview);
-  hide(imageDisplay);
-  hide(loader);
-  hide(predResult);
-  show(uploadCaption);
+  hide(imagePreviewOri);
+  hide(imageDisplayOri);
+  hide(loaderOri);
+  hide(predResultOri);
+  show(uploadCaptionOri);
 
-  imageDisplay.classList.remove("loading");
-}
+  hide(imagePreviewMakeup);
+  hide(imageDisplayMakeup);
+  hide(loaderMakeup);
+  hide(predResultMakeup);
+  show(uploadCaptionMakeup);
 
-function previewFile(file) {
-  console.log(file.name);
-  var fileName = encodeURI(file.name);
-
-  var reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onloadend = () => {
-    imagePreview.src = URL.createObjectURL(file);
-
-    show(imagePreview);
-    hide(uploadCaption);
-
-    predResult.innerHTML = "";
-    imageDisplay.classList.remove("loading");
-
-    displayImage(reader.result, "image-display");
-  };
-}
-
-function predictImageCls(image) {
-  fetch("/predict-img-cls", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(image)
-  })
-    .then(resp => {
-      if (resp.ok)
-        resp.json().then(data => {
-          displayResult(data);
-        });
-    })
-    .catch(err => {
-      console.log("An error occured", err.message);
-      window.alert("에러 발생!");
-    });
+  imageDisplayOri.classList.remove("loading");
+  imageDisplayMakeup.classList.remove("loading");
 }
 
 function predictImageBeauty(image) {
@@ -144,9 +163,9 @@ function displayImage(image, id) {
 }
 
 function displayResult(data) {
-  hide(loader);
-  predResult.innerHTML = data.result;
-  show(predResult);
+  hide(loaderOri);
+  predResultOri.innerHTML = data.result;
+  show(predResultOri);
 }
 
 function hide(el) {
