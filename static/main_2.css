@@ -22,7 +22,7 @@ body {
 }
 
 .button:hover {
-  background-color: rgb(16, 110, 190);
+  background-color: rgb(45, 212, 204);
 }
 
 .button.disabled {
@@ -82,7 +82,7 @@ body {
   cursor: pointer;
   width: 16rem;
   height: 10rem;
-  background: rgb(104, 181, 245);
+  background: rgb(181, 144, 248);
   border: 0.1rem dashed #6060f5;
   border-radius: 0.4rem;
   display: flex;

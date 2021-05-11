@@ -26,19 +26,19 @@ fileDragMp.addEventListener("drop", fileSelectHandlerMakeup, false);
 fileSelectMp.addEventListener("change", fileSelectHandlerMakeup, false);
 
 function fileDragHoverOri(e) {
-  console.log(e);
+  console.log(e.type);
   e.preventDefault();
   e.stopPropagation();
 
-  this.className = e.type === "dragover" ? "upload-box-1 dragover" : "upload-box-1";
+  fileDragOri.className = e.type === "dragover" ? "upload-box-1 dragover" : "upload-box-1";
 }
 
 function fileDragHoverMakeup(e) {
-  console.log(e);
+  console.log(e.type);
   e.preventDefault();
   e.stopPropagation();
 
-  this.className = e.type === "dragover" ? "upload-box-2 dragover" : "upload-box-2";
+  fileDragMp.className = e.type === "dragover" ? "upload-box-2 dragover" : "upload-box-2";
 }
 
 function fileSelectHandlerOri(e) {
@@ -98,15 +98,22 @@ function previewFileMakeup(file) {
 function submitImageBeauty() {
   console.log("submit");
 
-  if (!imageDisplay.src || !imageDisplay.src.startsWith("data")) {
-    window.alert("이미지를 선택해 주세요.");
+  if (!imageDisplayOri.src || !imageDisplayOri.src.startsWith("data")) {
+    window.alert("원본 이미지를 선택해 주세요.");
     return;
   }
 
-  loader.classList.remove("hidden");
-  imageDisplay.classList.add("loading");
+  if (!imageDisplayMakeup.src || !imageDisplayMakeup.src.startsWith("data")) {
+    window.alert("메이크업 이미지를 선택해 주세요.");
+    return;
+  }
 
-  predictImageBeauty(imageDisplayOri.src);
+  loaderOri.classList.remove("hidden");
+  imageDisplayOri.classList.add("loading");
+  loaderMakeup.classList.remove("hidden");
+  imageDisplayMakeup.classList.add("loading");
+
+  predictImageBeauty(imageDisplayOri.src, imageDisplayMakeup.src);
 }
 
 function clearImage() {
@@ -136,13 +143,16 @@ function clearImage() {
   imageDisplayMakeup.classList.remove("loading");
 }
 
-function predictImageBeauty(image) {
+function predictImageBeauty(oriImage, mpImage) {
   fetch("/predict-img-beauty", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(image)
+    body: JSON.stringify({
+      oriImage : oriImage,
+      mpImage : mpImage
+    })
   })
     .then(resp => {
       if (resp.ok)
@@ -152,7 +162,6 @@ function predictImageBeauty(image) {
     })
     .catch(err => {
       console.log("An error occured", err.message);
-      window.alert("에러 발생!");
     });
 }
 
@@ -164,8 +173,10 @@ function displayImage(image, id) {
 
 function displayResult(data) {
   hide(loaderOri);
+  hide(loaderMakeup);
   predResultOri.innerHTML = data.result;
   show(predResultOri);
+  show(predResultMakeup);
 }
 
 function hide(el) {

@@ -1,5 +1,4 @@
-# 참조 : https://github.com/mtobeiyf/keras-flask-deploy-webapp
-# 텐서플로우 관련 패키지
+# Refer : https://github.com/mtobeiyf/keras-flask-deploy-webapp
 
 # 2.x
 # import tensorflow as tf
@@ -14,41 +13,41 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
 
-# 모델 확인 
+# Model check
 # https://keras.io/applications/ 
 # https://www.tensorflow.org/api_docs/python/tf/keras/applications
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2
 model = MobileNetV2(weights='imagenet')
 
-# 모델 저장
+# Model save
 # MODEL_PATH = 'models/model_p1/model.h5'
 # model.save(MODEL_PATH)
 
-# 모델 로드
+# Model load
 # model = load_model(MODEL_PATH, compile=False)
 
-# 확인
-# print('MobileNetV2 모델 로드 완료.')
+# Check
+# print('MobileNetV2 Model load successed.')
 
-# 이미지 분류 예측 메소드
+# Image classfication 
 def model_predict(img, model):
-    # 리사이징(조절 가능)
+    # Image resizing
     img = img.resize((224, 224))
 
-    # 이미지 배열 변환
+    # Image to array
     x = image.img_to_array(img)
 
-    # 필요시 주석 해제
+    # Check
     # x = np.true_divide(x, 255)
 
-    # 축 변경
+    # Axis convert
     x = np.expand_dims(x, axis=0)
 
-    # 이미지 전처리
+    # Image preprocessing
     x = preprocess_input(x, mode='tf')
 
-    # 예측
+    # predict
     preds = model.predict(x)
 
-    # 반환
+    # return value
     return preds
