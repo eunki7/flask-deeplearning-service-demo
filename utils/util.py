@@ -27,3 +27,12 @@ def np_to_base64(img_np):
     buffered = BytesIO()
     img.save(buffered, format="PNG")
     return u"data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode("ascii")
+
+def np_to_base64_bt(img_np):
+    """
+    Convert numpy image (RGB : JPEG) to base64 string
+    """
+    img = Image.fromarray(img_np)
+    buffered = BytesIO()
+    img.save(buffered, format="JPEG")
+    return u"data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode()

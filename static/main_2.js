@@ -99,12 +99,12 @@ function submitImageBeauty() {
   console.log("submit");
 
   if (!imageDisplayOri.src || !imageDisplayOri.src.startsWith("data")) {
-    window.alert("원본 이미지를 선택해 주세요.");
+    window.alert("Please select the original image.");
     return;
   }
 
   if (!imageDisplayMakeup.src || !imageDisplayMakeup.src.startsWith("data")) {
-    window.alert("메이크업 이미지를 선택해 주세요.");
+    window.alert("Please select a makeup image.");
     return;
   }
 
@@ -144,7 +144,7 @@ function clearImage() {
 }
 
 function predictImageBeauty(oriImage, mpImage) {
-  fetch("/predict-img-beauty", {
+  fetch("/predict-img-beauty-all", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -155,6 +155,7 @@ function predictImageBeauty(oriImage, mpImage) {
     })
   })
     .then(resp => {
+      console.log(resp)
       if (resp.ok)
         resp.json().then(data => {
           displayResult(data);
@@ -174,9 +175,12 @@ function displayImage(image, id) {
 function displayResult(data) {
   hide(loaderOri);
   hide(loaderMakeup);
-  predResultOri.innerHTML = data.result;
-  show(predResultOri);
-  show(predResultMakeup);
+  hide(imageDisplayMakeup);
+  hide(predResultMakeup);
+  hide(predResultOri);
+
+  imageDisplayOri.src = data.result
+  imageDisplayOri.classList.remove("loading");
 }
 
 function hide(el) {

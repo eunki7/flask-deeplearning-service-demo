@@ -24,14 +24,22 @@ def preprocess(img):
 def deprocess(img):
     return (img + 1) / 2
 
-def model_predict_all():
+def postprocess(img):
+    return (img  * 255).astype(np.uint8)
+
+def model_predict_all(ori_img):
     """Function for nomakeup image to all makeup images methods."""
     
+
     # image size
     img_size = 256
     
     # loads makeup and no_makeup images
-    no_makeup = cv2.resize(imread(os.path.join('mlib','imgs', 'no_makeup', 'xfsy_0071.png')), (img_size, img_size))
+    no_makeup = cv2.resize(np.asarray(ori_img), (img_size, img_size))
+    
+    # loads local test image
+    # no_makeup = cv2.resize(imread(os.path.join('mlib','imgs', 'no_makeup', 'xfsy_0071.png')), (img_size, img_size))
+
     X_img = np.expand_dims(preprocess(no_makeup), 0)
     makeups = glob.glob(os.path.join('mlib', 'imgs', 'makeup', '*.*'))
     
@@ -67,10 +75,10 @@ def model_predict_all():
         result[:img_size, (i + 1) * img_size: (i + 2) * img_size] = makeup / 255.
         result[img_size: 2 * img_size, (i + 1) * img_size: (i + 2) * img_size] = Xs_[0]
 
-        # test image save
-        imsave('result.jpg', result)
-        
-    return result
+    # test image save
+    # imsave('result.jpg', result)
+
+    return postprocess(result)
 
 # Unit Test
 if __name__ == '__main__':

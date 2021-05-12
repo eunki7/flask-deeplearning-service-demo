@@ -12,7 +12,7 @@ from mlib import beauty_gan as img_bt
 import numpy as np
 
 # Utility
-from utils.util import base64_to_pil, np_to_base64
+from utils.util import base64_to_pil, np_to_base64_bt
 
 # Flask declare
 app = Flask(__name__)
@@ -58,7 +58,7 @@ def predict_cls():
     return jsonify(result=result, probability=pred_proba)
 
 
-@app.route('/predict-img-beauty', methods=['POST'])
+@app.route('/predict-img-beauty-all', methods=['POST'])
 def predict_beauty():
 
     # Json request
@@ -71,8 +71,9 @@ def predict_beauty():
     # Test image save
     # ori_img.save("./image1.png")
     # mp_img.save("./image2.png")
-        
-    return jsonify(result=np_to_base64(img_bt.model_predict_all()))
+
+    # Json response
+    return jsonify(result=np_to_base64_bt(img_bt.model_predict_all(ori_img)))
 
 
 if __name__ == '__main__':
