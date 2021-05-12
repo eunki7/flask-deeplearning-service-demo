@@ -25,6 +25,13 @@ fileDragMp.addEventListener("dragleave", fileDragHoverMakeup, false);
 fileDragMp.addEventListener("drop", fileSelectHandlerMakeup, false);
 fileSelectMp.addEventListener("change", fileSelectHandlerMakeup, false);
 
+
+document.querySelectorAll('input[type=radio][name="flexRadioDefault"]').forEach(
+  radio => radio.addEventListener('change', () => 
+    alert(radio.value)
+  )
+);
+
 function fileDragHoverOri(e) {
   console.log(e.type);
   e.preventDefault();
