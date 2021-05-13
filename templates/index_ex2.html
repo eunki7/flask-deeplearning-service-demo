@@ -8,17 +8,17 @@
     <div class="form-check">
       <input class="form-check-input" type="radio" name="flexRadioDefault" id="single-beauty-radio" value='single'>
       <label class="form-check-label" for="single-beauty-radio">
-        Single Beauty Mode
+        Single Beauty Mode : auto makeup
       </label>
     </div>
     <div class="form-check">
       <input class="form-check-input" type="radio" name="flexRadioDefault" id="all-beauty-radio" value='all' checked>
       <label class="form-check-label" for="all-beauty-radio">
-        All Beauty Mode
+        All Beauty Mode : custom makeup
       </label>
     </div>
   </div>
-  <div class="panel">
+  <div class="panel" id="single-panel">
     <h5>Your face image</h5>
     <input id="file-upload-gan-ori" class="hidden" type="file" accept="image/x-png,image/gif,image/jpeg" />
     <label for="file-upload-gan-ori" id="file-drag-gan-ori" class="upload-box-1">
@@ -26,7 +26,7 @@
       <img id="image-preview-ori" class="hidden" />
     </label>
   </div>
-  <div class="panel">
+  <div class="panel" id="all-panel"> 
     <h5>Your makeup image</h5>
     <input id="file-upload-gan-makeup" class="hidden" type="file" accept="image/x-png,image/gif,image/jpeg" />
     <label for="file-upload-gan-makeup" id="file-drag-gan-makeup" class="upload-box-2">
@@ -35,8 +35,8 @@
     </label>
   </div>
   <div style="margin-bottom: 2rem;">
-    <input type="button" value="Submit" class="button" onclick="submitImageBeauty();" />
-    <input type="button" value="Clear" class="button" onclick="clearImage();" />
+    <input type="button" id="submit" value="Submit" class="button" onclick="submitImageBeauty();" />
+    <input type="button" id="clear" value="Clear" class="button" onclick="clearImage();" />
   </div>
 
   <div id="image-box-b1">

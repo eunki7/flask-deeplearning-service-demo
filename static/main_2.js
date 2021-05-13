@@ -15,6 +15,9 @@ var uploadCaptionMakeup = document.getElementById("upload-caption-makeup");
 var predResultMakeup = document.getElementById("pred-result-makeup");
 var loaderMakeup = document.getElementById("loader-makeup");
 
+var allPanel = document.getElementById("all-panel");
+var submitBtn = document.getElementById("submit");
+
 fileDragOri.addEventListener("dragover", fileDragHoverOri, false);
 fileDragOri.addEventListener("dragleave", fileDragHoverOri, false);
 fileDragOri.addEventListener("drop", fileSelectHandlerOri, false);
@@ -25,15 +28,21 @@ fileDragMp.addEventListener("dragleave", fileDragHoverMakeup, false);
 fileDragMp.addEventListener("drop", fileSelectHandlerMakeup, false);
 fileSelectMp.addEventListener("change", fileSelectHandlerMakeup, false);
 
-
 document.querySelectorAll('input[type=radio][name="flexRadioDefault"]').forEach(
-  radio => radio.addEventListener('change', () => 
-    alert(radio.value)
-  )
+  radio => radio.addEventListener('change', changeBeautyMode, false)
 );
 
+function changeBeautyMode(e) {
+  clearImage();
+  
+  if( e.target.defaultValue == 'single' ) {
+    hide(allPanel);
+  } else {
+    show(allPanel);
+  }
+}
+
 function fileDragHoverOri(e) {
-  console.log(e.type);
   e.preventDefault();
   e.stopPropagation();
 
@@ -41,7 +50,6 @@ function fileDragHoverOri(e) {
 }
 
 function fileDragHoverMakeup(e) {
-  console.log(e.type);
   e.preventDefault();
   e.stopPropagation();
 
@@ -65,7 +73,6 @@ function fileSelectHandlerMakeup(e) {
 }
 
 function previewFileOri(file) {
-  console.log('previewFileOri', file.name);
   var fileName = encodeURI(file.name);
 
   var reader = new FileReader();
@@ -84,7 +91,6 @@ function previewFileOri(file) {
 }
 
 function previewFileMakeup(file) {
-  console.log('previewFileMakeup', file.name);
   var fileName = encodeURI(file.name);
 
   var reader = new FileReader();
@@ -103,24 +109,27 @@ function previewFileMakeup(file) {
 }
 
 function submitImageBeauty() {
-  console.log("submit");
+  
+  var modeFlag = document.getElementById('all-beauty-radio').checked;
 
-  if (!imageDisplayOri.src || !imageDisplayOri.src.startsWith("data")) {
-    window.alert("Please select the original image.");
-    return;
-  }
+    if (!imageDisplayOri.src || !imageDisplayOri.src.startsWith("data")) {
+      window.alert("Please select the original image.");
+      return;
+    }
 
-  if (!imageDisplayMakeup.src || !imageDisplayMakeup.src.startsWith("data")) {
-    window.alert("Please select a makeup image.");
-    return;
-  }
-
+    if ( modeFlag ) {
+      if (!imageDisplayMakeup.src || !imageDisplayMakeup.src.startsWith("data")) {
+        window.alert("Please select a makeup image.");
+        return;
+      }
+      loaderMakeup.classList.remove("hidden");
+      imageDisplayMakeup.classList.add("loading");
+    }
+ 
   loaderOri.classList.remove("hidden");
   imageDisplayOri.classList.add("loading");
-  loaderMakeup.classList.remove("hidden");
-  imageDisplayMakeup.classList.add("loading");
 
-  predictImageBeauty(imageDisplayOri.src, imageDisplayMakeup.src);
+  predictImageBeauty(imageDisplayOri.src, imageDisplayMakeup.src, modeFlag);
 }
 
 function clearImage() {
@@ -146,23 +155,32 @@ function clearImage() {
   hide(predResultMakeup);
   show(uploadCaptionMakeup);
 
+  submitBtn.disabled = false
+
   imageDisplayOri.classList.remove("loading");
   imageDisplayMakeup.classList.remove("loading");
 }
 
-function predictImageBeauty(oriImage, mpImage) {
-  fetch("/predict-img-beauty-all", {
+function predictImageBeauty(oriImage, mpImage, modeFlag) {
+
+  var callUrl = modeFlag ? "/predict-img-beauty-all" : "/predict-img-beauty-single",
+      data = modeFlag ? 
+      JSON.stringify({
+        oriImage : oriImage,
+        mpImage : mpImage
+      }) : 
+      JSON.stringify({
+        oriImage : oriImage
+      })
+
+  fetch(callUrl , {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      oriImage : oriImage,
-      mpImage : mpImage
-    })
+    body: data
   })
     .then(resp => {
-      console.log(resp)
       if (resp.ok)
         resp.json().then(data => {
           displayResult(data);
@@ -185,6 +203,8 @@ function displayResult(data) {
   hide(imageDisplayMakeup);
   hide(predResultMakeup);
   hide(predResultOri);
+
+  submitBtn.disabled = true
 
   imageDisplayOri.src = data.result
   imageDisplayOri.classList.remove("loading");

@@ -30,7 +30,7 @@ model = MobileNetV2(weights='imagenet')
 # print('MobileNetV2 Model load successed.')
 
 # Image classfication 
-def model_predict(img, model):
+def predict(img, model):
     # Image resizing
     img = img.resize((224, 224))
 

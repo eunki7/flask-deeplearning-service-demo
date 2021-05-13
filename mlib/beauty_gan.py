@@ -27,10 +27,9 @@ def deprocess(img):
 def postprocess(img):
     return (img  * 255).astype(np.uint8)
 
-def model_predict_all(ori_img):
+def predict_single_or_all(ori_img, mp_img=None):
     """Function for nomakeup image to all makeup images methods."""
     
-
     # image size
     img_size = 256
     
@@ -43,9 +42,15 @@ def model_predict_all(ori_img):
     X_img = np.expand_dims(preprocess(no_makeup), 0)
     makeups = glob.glob(os.path.join('mlib', 'imgs', 'makeup', '*.*'))
     
-    # use numpy
-    result = np.ones((2 * img_size, (len(makeups) + 1) * img_size, 3))
-    result[img_size: 2 *  img_size, :img_size] = no_makeup / 255.
+    # use numpy and result image size set
+    if mp_img is None :
+        result = np.ones((2 * img_size, (len(makeups) + 1) * img_size, 3))
+        result[img_size: 2 *  img_size, :img_size] = no_makeup / 255.
+    else :
+        result = np.ones((img_size, 2 * img_size, 3))
+        print(result.shape)
+        result[:img_size, :img_size] = no_makeup / 255.
+        imsave('result_all.jpg', result)
     
     # initialize tensorflow
     tf.reset_default_graph()
@@ -62,25 +67,33 @@ def model_predict_all(ori_img):
     Y = graph.get_tensor_by_name('Y:0')
     Xs = graph.get_tensor_by_name('generator/xs:0')
 
-    # generate all makeup image
-    for i in range(len(makeups)):
-        makeup = cv2.resize(imread(makeups[i]), (img_size, img_size))
-        Y_img = np.expand_dims(preprocess(makeup), 0)
-        
-        # run beauty gan
-        Xs_ = sess.run(Xs, feed_dict={X: X_img, Y: Y_img})
-        Xs_ = deprocess(Xs_)
-        
-        # image calculate
-        result[:img_size, (i + 1) * img_size: (i + 2) * img_size] = makeup / 255.
-        result[img_size: 2 * img_size, (i + 1) * img_size: (i + 2) * img_size] = Xs_[0]
-
-    # test image save
-    # imsave('result.jpg', result)
+    if mp_img is None :
+        # generate all makeup image
+        for i in range(len(makeups)):
+            makeup = cv2.resize(imread(makeups[i]), (img_size, img_size))
+            Y_img = np.expand_dims(preprocess(makeup), 0)
+            
+            # run beauty gan
+            Xs_ = sess.run(Xs, feed_dict={X: X_img, Y: Y_img})
+            Xs_ = deprocess(Xs_)
+            
+            # image calculate
+            result[:img_size, (i + 1) * img_size: (i + 2) * img_size] = makeup / 255.
+            result[img_size: 2 * img_size, (i + 1) * img_size: (i + 2) * img_size] = Xs_[0]
+            
+            # test image save
+            # imsave('result_single.jpg', result)
+    else :
+            Y_img = np.expand_dims(preprocess(cv2.resize(np.asarray(mp_img), (img_size, img_size))), 0)
+            
+            # run beauty gan
+            Xs_ = sess.run(Xs, feed_dict={X: X_img, Y: Y_img})
+            Xs_ = deprocess(Xs_)
+            
+            # result[:img_size, 1 * img_size: 2 * img_size] = Y_img / 255.
+            result[img_size: 2 * img_size, 1 * img_size: 2 * img_size] = Xs_[0]
+            
+            # test image save
+            # imsave('result_all.jpg', result)
 
     return postprocess(result)
-
-# Unit Test
-if __name__ == '__main__':
-    model_predict_all()
-    

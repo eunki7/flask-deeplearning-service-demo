@@ -37,7 +37,7 @@ def predict_cls():
     # img.save("./your save foloder/image.png")
 
     # Image predict
-    preds = img_cf.model_predict(img, img_cf.model)
+    preds = img_cf.predict(img, img_cf.model)
 
     # Value : Image max probability
     pred_proba = "{:.3f}".format(np.amax(preds))
@@ -58,22 +58,36 @@ def predict_cls():
     return jsonify(result=result, probability=pred_proba)
 
 
-@app.route('/predict-img-beauty-all', methods=['POST'])
-def predict_beauty():
+@app.route('/predict-img-beauty-single', methods=['POST'])
+def predict_beauty_single():
 
     # Json request
     data = request.json
     
     # Image convert
     ori_img = base64_to_pil(data.get('oriImage'))
-    mp_img  = base64_to_pil(data.get('mpImage'))
+    
+    # Test image save
+    # ori_img.save("./image1.png")
+
+    # Json response
+    return jsonify(result=np_to_base64_bt(img_bt.predict_single_or_all(ori_img)))
+
+@app.route('/predict-img-beauty-all', methods=['POST'])
+def predict_beauty_all():
+
+    # Json request
+    data = request.json
+    
+    # Image convert
+    ori_img, mp_img = base64_to_pil(data.get('oriImage')), base64_to_pil(data.get('mpImage'))
     
     # Test image save
     # ori_img.save("./image1.png")
     # mp_img.save("./image2.png")
 
     # Json response
-    return jsonify(result=np_to_base64_bt(img_bt.model_predict_all(ori_img)))
+    return jsonify(result=np_to_base64_bt(img_bt.predict_single_or_all(ori_img, mp_img)))
 
 
 if __name__ == '__main__':
