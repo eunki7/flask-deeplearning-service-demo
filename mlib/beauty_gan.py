@@ -91,7 +91,7 @@ def predict_single_or_all(ori_img, mp_img=None):
             Xs_ = deprocess(Xs_)
             
             # result[:img_size, 1 * img_size: 2 * img_size] = Y_img / 255.
-            result[img_size: 2 * img_size, 1 * img_size: 2 * img_size] = Xs_[0]
+            result[:img_size, img_size: 2 * img_size] = Xs_[0]
             
             # test image save
             # imsave('result_all.jpg', result)

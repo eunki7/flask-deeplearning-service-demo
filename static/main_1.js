@@ -57,7 +57,6 @@ function clearImage() {
 }
 
 function previewFile(file) {
-  console.log(file.name);
   var fileName = encodeURI(file.name);
 
   var reader = new FileReader();
