@@ -6,6 +6,8 @@ fileDrag.addEventListener("dragleave", fileDragHover, false);
 fileDrag.addEventListener("drop", fileSelectHandler, false);
 fileSelect.addEventListener("change", fileSelectHandler, false);
 
+var submitBtn = document.getElementById("submit");
+
 function fileDragHover(e) {
   e.preventDefault();
   e.stopPropagation();
@@ -30,7 +32,7 @@ var loader = document.getElementById("loader");
 function submitImageCls() {
 
   if (!imageDisplay.src || !imageDisplay.src.startsWith("data")) {
-    window.alert("이미지를 선택해 주세요.");
+    window.alert("Please select a image.");
     return;
   }
 
@@ -46,6 +48,8 @@ function clearImage() {
   imagePreview.src = "";
   imageDisplay.src = "";
   predResult.innerHTML = "";
+
+  submitBtn.disabled = false
 
   hide(imagePreview);
   hide(imageDisplay);
@@ -90,7 +94,6 @@ function predictImageCls(image) {
     })
     .catch(err => {
       console.log("An error occured", err.message);
-      window.alert("에러 발생!");
     });
 }
 
@@ -103,6 +106,7 @@ function displayImage(image, id) {
 function displayResult(data) {
   hide(loader);
   predResult.innerHTML = data.result;
+  submitBtn.disabled = true
   show(predResult);
 }
 
