@@ -20,12 +20,12 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def index_ex1():
     # Main test page : Image Classfication
-    return render_template('index_ex1.html')
+    return render_template('index.html')
 
 @app.route('/beauty', methods=['GET'])
 def index_ex2():
     # Main test page : BeautyGan
-    return render_template('index_ex2.html')
+    return render_template('index_beauty.html')
 
 @app.route('/predict-img-cls', methods=['POST'])
 def predict_cls():
