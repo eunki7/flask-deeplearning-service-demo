@@ -7,3 +7,5 @@ tensorflow
 Werkzeug
 imageio
 opencv-python
+cmake
+dlib

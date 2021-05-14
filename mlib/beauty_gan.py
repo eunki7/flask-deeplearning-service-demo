@@ -12,11 +12,30 @@ import os
 import glob
 from imageio import imread, imsave
 import cv2
+import dlib
 
 # Model Paths
 MODEL_GAN_PATH = os.path.join('models', 'model_p2', 'model.meta')
 MODEL_GAN_CHECKPOINT_PATH = os.path.join('models', 'model_p2')
 MODEL_FACE_LANDMARK_PATH = os.path.join('models', 'model_dlib', 'shape_predictor_5_face_landmarks.dat')
+
+def align_faces(img):
+    detector = dlib.get_frontal_face_detector()
+    sp = dlib.shape_predictor(MODEL_FACE_LANDMARK_PATH)
+    objs = dlib.full_object_detections()
+    
+    dets = detector(img, 1)
+
+    for detection in dets:
+        s = sp(img, detection)
+        objs.append(s)
+
+    faces = dlib.get_face_chips(img, objs, size=256, padding=0.35)
+    
+    # test image save
+    # imsave('result_face_align.png', faces[0])
+    
+    return faces[0]
 
 def preprocess(img):
     return (img / 255. - 0.5) * 2
@@ -33,8 +52,8 @@ def predict_single_or_all(ori_img, mp_img=None):
     # image size
     img_size = 256
     
-    # loads makeup and no_makeup images
-    no_makeup = cv2.resize(np.asarray(ori_img), (img_size, img_size))
+    # face align, loads makeup and no_makeup images
+    no_makeup = cv2.resize(align_faces(np.asarray(ori_img)), (img_size, img_size))
     
     # loads local test image
     # no_makeup = cv2.resize(imread(os.path.join('mlib','imgs', 'no_makeup', 'xfsy_0071.png')), (img_size, img_size))
@@ -50,7 +69,6 @@ def predict_single_or_all(ori_img, mp_img=None):
         result = np.ones((img_size, 2 * img_size, 3))
         print(result.shape)
         result[:img_size, :img_size] = no_makeup / 255.
-        imsave('result_all.jpg', result)
     
     # initialize tensorflow
     tf.reset_default_graph()
@@ -82,9 +100,9 @@ def predict_single_or_all(ori_img, mp_img=None):
             result[img_size: 2 * img_size, (i + 1) * img_size: (i + 2) * img_size] = Xs_[0]
             
             # test image save
-            # imsave('result_single.jpg', result)
+            # imsave('result_single.png', result)
     else :
-            Y_img = np.expand_dims(preprocess(cv2.resize(np.asarray(mp_img), (img_size, img_size))), 0)
+            Y_img = np.expand_dims(preprocess(cv2.resize(align_faces(np.asarray(mp_img)), (img_size, img_size))), 0)
             
             # run beauty gan
             Xs_ = sess.run(Xs, feed_dict={X: X_img, Y: Y_img})
@@ -94,6 +112,6 @@ def predict_single_or_all(ori_img, mp_img=None):
             result[:img_size, img_size: 2 * img_size] = Xs_[0]
             
             # test image save
-            # imsave('result_all.jpg', result)
+            # imsave('result_all.png', result)
 
     return postprocess(result)
