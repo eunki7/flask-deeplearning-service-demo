@@ -163,7 +163,7 @@ function clearImage() {
 
 function predictImageBeauty(oriImage, mpImage, modeFlag) {
 
-  var callUrl = modeFlag ? "/predict-img-beauty-all" : "/predict-img-beauty-single",
+  var callUrl = modeFlag ? "/predict/img-beauty-all" : "/predict/img-beauty-single",
       data = modeFlag ? 
       JSON.stringify({
         oriImage : oriImage,

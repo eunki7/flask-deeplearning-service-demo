@@ -2,7 +2,8 @@ import os
 import sys
 
 # Only flask
-from flask import Flask, request, render_template, Response, jsonify
+from flask import Flask, request, render_template, make_response, jsonify
+from flask_restplus import Resource, Api
 from gevent.pywsgi import WSGIServer
 
 # DL packages
@@ -14,19 +15,28 @@ import numpy as np
 # Utility
 from utils.util import base64_to_pil, np_to_base64_bt
 
-# Flask declare
+# Flask and Flask_restplus declare
 app = Flask(__name__)
+api = Api(app, 
+          # doc='/apidoc/',
+          version='1.0', 
+          title='Image DL API', 
+          description='Images classfication and beauty GAN RestAPI'
+    )
 
-@app.route('/', methods=['GET'])
-@app.route('/cls', methods=['GET'])
-def index_ex1():
-    # Main test page : Image Classfication
-    return render_template('index.html')
+predict_ns = api.namespace('predict', description='image prediction apis')
 
-@app.route('/beauty', methods=['GET'])
-def index_ex2():
-    # Main test page : BeautyGan
-    return render_template('index_beauty.html')
+@api.route('/cls')
+class ImageClsIndex(Resource):
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('index.html'), 200, headers)
+    
+@api.route('/beauty')
+class ImageBeautyIndex(Resource):
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('index_beauty.html'), 200, headers)
 
 @app.route('/predict/img-cls', methods=['POST'])
 def predict_cls():

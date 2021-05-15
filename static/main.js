@@ -79,7 +79,7 @@ function previewFile(file) {
 }
 
 function predictImageCls(image) {
-  fetch("/predict-img-cls", {
+  fetch("/predict/img-cls", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
