@@ -31,8 +31,11 @@ def index_ex2():
 @app.route('/predict/img-cls', methods=['POST'])
 def predict_cls():
     
+    # Json request
+    data = request.json
+
     # Image convert
-    img = base64_to_pil(request.json)
+    img = base64_to_pil(data.get('oriImage'))
 
     # Test image save
     # img.save("./your save foloder/image.png")

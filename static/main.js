@@ -84,7 +84,7 @@ function predictImageCls(image) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(image)
+    body: JSON.stringify({ oriImage : image })
   })
     .then(resp => {
       if (resp.ok)

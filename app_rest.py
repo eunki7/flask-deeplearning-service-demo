@@ -9,14 +9,18 @@ from gevent.pywsgi import WSGIServer
 # DL packages
 from mlib import image_classfication as img_cf
 from mlib import beauty_gan as img_bt
-
 import numpy as np
 
 # Utility
 from utils.util import base64_to_pil, np_to_base64_bt
+from werkzeug.datastructures import FileStorage
 
 # Flask and Flask_restplus declare
 app = Flask(__name__)
+
+# Swagger gui setting
+app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
+
 api = Api(app, 
           # doc='/apidoc/',
           version='1.0', 
@@ -24,82 +28,105 @@ api = Api(app,
           description='Images classfication and beauty GAN RestAPI'
     )
 
+# Flask rest plus namespace define
 predict_ns = api.namespace('predict', description='image prediction apis')
+
+# Swagger Error Message
+get_err_msg = { 
+    200: 'Success',
+    404: 'Not found',
+    500: 'Internal server error'
+}
+post_err_msg = {
+    200: 'Success',
+    400: 'Bad request',
+    500: 'Internal server error'
+}
 
 @api.route('/cls')
 class ImageClsIndex(Resource):
+    @api.doc(responses=get_err_msg)
     def get(self):
         headers = {'Content-Type': 'text/html'}
         return make_response(render_template('index.html'), 200, headers)
     
 @api.route('/beauty')
 class ImageBeautyIndex(Resource):
+    @api.doc(responses=get_err_msg)
     def get(self):
         headers = {'Content-Type': 'text/html'}
         return make_response(render_template('index_beauty.html'), 200, headers)
 
-@app.route('/predict/img-cls', methods=['POST'])
-def predict_cls():
-    
-    # Image convert
-    img = base64_to_pil(request.json)
+@predict_ns.route('/img-cls', methods=['POST'])
+@predict_ns.doc(params={'oriImage': 'Base64 image'})
+class ImageClsPredict(Resource):
+    @api.doc(responses=post_err_msg)
+    def post(self):
 
-    # Test image save
-    # img.save("./your save foloder/image.png")
+        # Json request
+        data = request.json
 
-    # Image predict
-    preds = img_cf.predict(img, img_cf.model)
+        # Image convert
+        img = base64_to_pil(data.get('oriImage'))
 
-    # Value : Image max probability
-    pred_proba = "{:.3f}".format(np.amax(preds))
+        # Test image save
+        # img.save("./your save foloder/image.png")
 
-    # Label : Image classfication
-    pred_class = img_cf.decode_predictions(preds, top=1)
+        # Image predict
+        preds = img_cf.predict(img, img_cf.model)
 
-    # Check image label
-    # print(pred_class)
+        # Value : Image max probability
+        pred_proba = "{:.3f}".format(np.amax(preds))
 
-    # Result : image label
-    result = str(pred_class[0][0][1])
+        # Label : Image classfication
+        pred_class = img_cf.decode_predictions(preds, top=1)
 
-    # label capitalize
-    result = result.replace('_', ' ').capitalize()
+        # Check image label
+        # print(pred_class)
 
-    # Json response
-    return jsonify(result=result, probability=pred_proba)
+        # Result : image label
+        result = str(pred_class[0][0][1])
 
+        # label capitalize
+        result = result.replace('_', ' ').capitalize()
 
-@app.route('/predict/img-beauty-single', methods=['POST'])
-def predict_beauty_single():
+        # Json response
+        return jsonify(result=result, probability=pred_proba)
 
-    # Json request
-    data = request.json
-    
-    # Image convert
-    ori_img = base64_to_pil(data.get('oriImage'))
-    
-    # Test image save
-    # ori_img.save("./image1.png")
+@predict_ns.route('/img-beauty-single', methods=['POST'])
+@predict_ns.doc(params={'oriImage': 'Base64 image'})
+class ImageBeautyPredictSingle(Resource):
+    @api.doc(responses=post_err_msg)
+    def post(self):
+        # Json request
+        data = request.json
+        
+        # Image convert
+        ori_img = base64_to_pil(data.get('oriImage'))
+        
+        # Test image save
+        # ori_img.save("./image1.png")
 
-    # Json response
-    return jsonify(result=np_to_base64_bt(img_bt.predict_single_or_all(ori_img)))
+        # Json response
+        return jsonify(result=np_to_base64_bt(img_bt.predict_single_or_all(ori_img)))
 
-@app.route('/predict/img-beauty-all', methods=['POST'])
-def predict_beauty_all():
+@predict_ns.route('/img-beauty-all', methods=['POST'])
+@predict_ns.doc(params={'oriImage': 'Base64 image', 'mpImage': 'Base64 image'})
+class ImageBeautyPredictAll(Resource):
+    @api.doc(responses=post_err_msg)
+    def post(self):
+        # Json request
+        data = request.json
+        
+        # Image convert
+        ori_img, mp_img = base64_to_pil(data.get('oriImage')), base64_to_pil(data.get('mpImage'))
+        
+        # Test image save
+        # ori_img.save("./image1.png")
+        # mp_img.save("./image2.png")
 
-    # Json request
-    data = request.json
-    
-    # Image convert
-    ori_img, mp_img = base64_to_pil(data.get('oriImage')), base64_to_pil(data.get('mpImage'))
-    
-    # Test image save
-    # ori_img.save("./image1.png")
-    # mp_img.save("./image2.png")
-
-    # Json response
-    return jsonify(result=np_to_base64_bt(img_bt.predict_single_or_all(ori_img, mp_img)))
-
+        # Json response
+        return jsonify(result=np_to_base64_bt(img_bt.predict_single_or_all(ori_img, mp_img)))
 
 if __name__ == '__main__':
     # Flask Server Start
