@@ -3,7 +3,7 @@ import sys
 
 # Only flask
 from flask import Flask, request, render_template, make_response, jsonify
-from flask_restplus import Resource, Api
+from flask_restplus import Resource, Api, fields
 from gevent.pywsgi import WSGIServer
 
 # DL packages
@@ -13,7 +13,6 @@ import numpy as np
 
 # Utility
 from utils.util import base64_to_pil, np_to_base64_bt
-from werkzeug.datastructures import FileStorage
 
 # Flask and Flask_restplus declare
 app = Flask(__name__)
@@ -21,6 +20,7 @@ app = Flask(__name__)
 # Swagger gui setting
 app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
 
+# Api initialize
 api = Api(app, 
           # doc='/apidoc/',
           version='1.0', 
@@ -30,6 +30,22 @@ api = Api(app,
 
 # Flask rest plus namespace define
 predict_ns = api.namespace('predict', description='image prediction apis')
+
+# Flask marshalling models
+predict_ns_single_img = predict_ns.model(
+    "Single input Image model",
+    {
+        "oriImage": fields.String(description="oriImage", required=True)
+    },
+)
+
+predict_ns_two_img = predict_ns.model(
+    "Two input Image model",
+    {
+        "oriImage": fields.String(description="oriImage", required=True),
+        "mpImage": fields.String(description="mpImage", required=True)
+    },
+)
 
 # Swagger Error Message
 get_err_msg = { 
@@ -56,9 +72,9 @@ class ImageBeautyIndex(Resource):
         return make_response(render_template('index_beauty.html'), 200, headers)
 
 @predict_ns.route('/img-cls', methods=['POST'])
-@predict_ns.doc(params={'oriImage': 'Base64 image'})
 class ImageClsPredict(Resource):
     @api.doc(responses=post_err_msg)
+    @predict_ns.expect(predict_ns_single_img)
     def post(self):
 
         # Json request
@@ -92,9 +108,9 @@ class ImageClsPredict(Resource):
         return jsonify(result=result, probability=pred_proba)
 
 @predict_ns.route('/img-beauty-single', methods=['POST'])
-@predict_ns.doc(params={'oriImage': 'Base64 image'})
 class ImageBeautyPredictSingle(Resource):
     @api.doc(responses=post_err_msg)
+    @predict_ns.expect(predict_ns_single_img)
     def post(self):
         # Json request
         data = request.json
@@ -109,9 +125,9 @@ class ImageBeautyPredictSingle(Resource):
         return jsonify(result=np_to_base64_bt(img_bt.predict_single_or_all(ori_img)))
 
 @predict_ns.route('/img-beauty-all', methods=['POST'])
-@predict_ns.doc(params={'oriImage': 'Base64 image', 'mpImage': 'Base64 image'})
 class ImageBeautyPredictAll(Resource):
     @api.doc(responses=post_err_msg)
+    @predict_ns.expect(predict_ns_two_img)
     def post(self):
         # Json request
         data = request.json
