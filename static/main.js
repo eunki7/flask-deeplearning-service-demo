@@ -87,10 +87,13 @@ function predictImageCls(image) {
     body: JSON.stringify({ oriImage : image })
   })
     .then(resp => {
-      if (resp.ok)
+      if (resp.ok) {
         resp.json().then(data => {
           displayResult(data);
         });
+      } else {
+        clearImage()
+      }
     })
     .catch(err => {
       console.log("An error occured", err.message);

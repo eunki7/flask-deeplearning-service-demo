@@ -34,13 +34,11 @@ predict_ns = api.namespace('predict', description='image prediction apis')
 # Swagger Error Message
 get_err_msg = { 
     200: 'Success',
-    404: 'Not found',
-    500: 'Internal server error'
+    404: 'Page Not found',
 }
 post_err_msg = {
     200: 'Success',
-    400: 'Bad request',
-    500: 'Internal server error'
+    500: 'Wrong oriImg or mpImg parameters'
 }
 
 @api.route('/cls')
@@ -127,6 +125,12 @@ class ImageBeautyPredictAll(Resource):
 
         # Json response
         return jsonify(result=np_to_base64_bt(img_bt.predict_single_or_all(ori_img, mp_img)))
+
+# RestApi errors handling
+@predict_ns.errorhandler(Exception)
+def predict_ns_handler(error):
+    '''predict_ns error handler'''
+    return {'message': 'Wrong oriImage or mpImage parameters.'}, getattr(error, 'code', 500)
 
 if __name__ == '__main__':
     # Flask Server Start
