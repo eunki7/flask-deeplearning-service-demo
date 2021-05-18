@@ -1,6 +1,3 @@
-import os
-import sys
-
 # Only flask
 from flask import Flask, request, render_template, Response, jsonify
 from gevent.pywsgi import WSGIServer

@@ -1,6 +1,3 @@
-import os
-import sys
-
 # Only flask
 from flask import Flask, request, render_template, make_response, jsonify
 from flask_restplus import Resource, Api, fields
