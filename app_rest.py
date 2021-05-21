@@ -143,7 +143,7 @@ class ImageBeautyPredictAll(Resource):
 @predict_ns.errorhandler(Exception)
 def predict_ns_handler(error):
     '''predict_ns error handler'''
-    return {'message': 'Wrong oriImage or mpImage parameters.'}, getattr(error, 'code', 500)
+    return {'message': 'Wrong oriImage or mpImage parameters or not face image.'}, getattr(error, 'code', 500)
 
 if __name__ == '__main__':
     # Flask Server Start
