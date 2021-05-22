@@ -32,7 +32,7 @@ Save pretrained model, index, checkpoint to `models/model_p2`
 +--mlib
 +--models
 |   +-- model_dlib
-|   +-- model_p2 <-here save models
+|   +-- model_p2 -> make folder, here save models
 +--static
 ...
 ```
