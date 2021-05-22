@@ -14,14 +14,14 @@
 
 - Website: [https://arxiv.org/abs/1801.04381](https://arxiv.org/abs/1801.04381)
 
-### Usage
+Usage
 
 - Python 3.6+
 - Tensorflow 1.x
 
 Download pretrained models
 
-- [https://pan.baidu.com/s/1wngvgT0qzcKJ5LfLMO7m8A](https://pan.baidu.com/s/1wngvgT0qzcKJ5LfLMO7m8A)，7lip
+- [https://pan.baidu.com/s/1wngvgT0qzcKJ5LfLMO7m8A](https://pan.baidu.com/s/1wngvgT0qzcKJ5LfLMO7m8A)
 - [https://drive.google.com/drive/folders/1pgVqnF2-rnOxcUQ3SO4JwHUFTdiSe5t9](https://drive.google.com/drive/folders/1pgVqnF2-rnOxcUQ3SO4JwHUFTdiSe5t9)
 
 Save pretrained model, index, checkpoint to `models/model_p2`
