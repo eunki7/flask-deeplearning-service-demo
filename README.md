@@ -97,4 +97,4 @@ Image beautyGAN demo
 
 ## License
 ------------------
-[GPL License](LICENSE.md)
+[GPL License](LICENSE)
